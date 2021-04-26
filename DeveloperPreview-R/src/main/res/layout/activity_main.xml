@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        >
+        <Button
+            android:id="@+id/bt_one_time_permissions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="One-time permissions"
+            android:onClick="oneTimePermissions"/>
+
+        <Button
+            android:id="@+id/bt_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Background location"
+            android:onClick="backgroundLocation"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        >
+        <Button
+            android:id="@+id/bt_mac"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="getMac"
+            android:onClick="getMac"/>
+        <Button
+            android:id="@+id/bt_biometric"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Biometric"
+            android:onClick="biometric"/>
+        <Button
+            android:id="@+id/bt_encurityCrypto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="encurityCrypto"
+            android:onClick="encurityCrypto"/>
+    </LinearLayout>
+
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_result"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </ScrollView>
+
+
+
+</LinearLayout>
