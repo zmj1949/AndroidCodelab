@@ -1,0 +1,9 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.gaoxuan.phone",
+    "sha256_cert_fingerprints":
+    ["43:E7:05:40:B2:14:D7:89:23:D4:7F:3B:2F:02:95:04:4E:1D:AB:3B:FD:7A:D7:47:FB:A3:78:8B:32:4C:B4:D7"]
+  }
+}]
