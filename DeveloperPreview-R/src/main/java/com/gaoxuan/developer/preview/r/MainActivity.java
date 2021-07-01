@@ -1,6 +1,7 @@
 package com.gaoxuan.developer.preview.r;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
@@ -8,14 +9,16 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -30,6 +33,8 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.net.NetworkInterface;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
@@ -50,7 +55,44 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         tvResult = findViewById(R.id.tv_result);
         LocationHelper.init(getApplicationContext());
+
+
+
     }
+/*    @RequiresApi(api = Build.VERSION_CODES.R)
+    private void auditDataAccess(){
+        //审核对数据的访问
+        AppOpsManager.OnOpNotedCallback appOpsCallback =
+                new AppOpsManager.OnOpNotedCallback() {
+                    private void logPrivateDataAccess(String opCode, String trace) {
+                        Log.i("xdsd", "Private data accessed. " +
+                                "Operation: $opCode\nStack Trace:\n$trace");
+                    }
+
+                    @Override
+                    public void onNoted(@NonNull SyncNotedAppOp syncNotedAppOp) {
+                        logPrivateDataAccess(syncNotedAppOp.getOp(),
+                                Arrays.toString(new Throwable().getStackTrace()));
+                    }
+
+                    @Override
+                    public void onSelfNoted(@NonNull SyncNotedAppOp syncNotedAppOp) {
+                        logPrivateDataAccess(syncNotedAppOp.getOp(),
+                                Arrays.toString(new Throwable().getStackTrace()));
+                    }
+
+                    @Override
+                    public void onAsyncNoted(@NonNull AsyncNotedAppOp asyncNotedAppOp) {
+                        logPrivateDataAccess(asyncNotedAppOp.getOp(),
+                                asyncNotedAppOp.getMessage());
+                    }
+                };
+
+        AppOpsManager appOpsManager = getSystemService(AppOpsManager.class);
+        if (appOpsManager != null) {
+            appOpsManager.setOnOpNotedCallback(getMainExecutor(), appOpsCallback);
+        }
+    }*/
 
     //测试是否会弹出一次的权限提示框，并且允许仅限这次后，下次启动还需要授权，看截图。
     public void oneTimePermissions(View view) {
@@ -174,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            ret = e.toString();
         }
         return String.valueOf(ret);
     }
@@ -183,5 +226,43 @@ public class MainActivity extends AppCompatActivity {
         EncurityCryptoHelper.putString(getApplicationContext(),"test","test");
         String content = EncurityCryptoHelper.getString(getApplicationContext(),"test");
         Log.d("xdsd","content:"+content);
+    }
+
+    public void getApps(View view) {
+        List<String> list =  getPkgListNew(getApplicationContext());
+        tvResult.setText("list:"+list.size());
+    }
+
+    private List<String> getPkgListNew(Context context) {
+        List<String> packages = new ArrayList<String>();
+        List<String> systemApp = new ArrayList<String>();
+        List<String> userApp = new ArrayList<String>();
+
+        try {
+            List<PackageInfo> packageInfos = context.getPackageManager().getInstalledPackages(0);
+            Log.d("xdsd","packageInfos:"+packageInfos.size());
+
+            for (PackageInfo info : packageInfos) {
+                String pkg = info.packageName;
+                packages.add(pkg);
+                if (isSystemApp(info)){
+                    systemApp.add(pkg);
+                }else {
+                    userApp.add(pkg);
+                }
+            }
+        } catch (Throwable t) {
+            t.printStackTrace();;
+        }
+        Log.d("xdsd","systemApp:"+systemApp.size()+",userApp:"+userApp.size());
+        Log.d("xdsd","userApp:"+userApp);
+
+        return packages;
+    }
+
+    private boolean isSystemApp(PackageInfo pi) {
+        boolean isSysApp = (pi.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 1;
+        boolean isSysUpd = (pi.applicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) == 1;
+        return isSysApp || isSysUpd;
     }
 }
